@@ -4,13 +4,13 @@
 Summary: Adaptive Multi-Rate Floating-point (AMR) Speech Codec
 Name: opencore-amr
 Version: 0.1.3
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: Distributable
 Group: System Environment/Libraries
 URL: http://opencore-amr.sourceforge.net
 Source0: http://sourceforge.net/projects/opencore-amr/files/opencore-amr/opencore-amr-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: gcc-c++
+BuildRequires: gcc-c++, atrpms-rpm-config
 %lib_dependencies
 
 %description
@@ -38,6 +38,9 @@ rm -rf %{buildroot}
 %doc COPYING AUTHORS ChangeLog NEWS
 
 %changelog
+* Wed May 6 2015 Fredrik Fornstad <fredrik.fornstad@gmail.com> - 0.1.3-3
+- Added buildrequirement atrpms-rpm-config
+
 * Fri May 1 2015 Fredrik Fornstad <fredrik.fornstad@gmail.com> - 0.1.3-2
 - Corrected Source0 download path
 
