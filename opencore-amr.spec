@@ -1,23 +1,46 @@
-%lib_package opencore-amrnb 0
-%lib_package opencore-amrwb 0
+%global libver 0.0.3
 
 Summary: Adaptive Multi-Rate Floating-point (AMR) Speech Codec
 Name: opencore-amr
 Version: 0.1.3
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: Distributable
 Group: System Environment/Libraries
 URL: http://opencore-amr.sourceforge.net
 Source0: http://sourceforge.net/projects/opencore-amr/files/opencore-amr/opencore-amr-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: gcc-c++, atrpms-rpm-config
-%lib_dependencies
+BuildRequires: gcc-c++
+Requires: %{name}-libs_nb_%{libver}, %{name}-libs_wb_%{libver}
 
 %description
 3GPP released reference implementations 3GPP Adaptive Multi-Rate
 Floating-point (AMR) Speech Codec (3GPP TS 26.104 V 7.0.0) and 3GPP
 AMR Adaptive Multi-Rate - Wideband (AMR-WB) Speech Codec (3GPP TS
 26.204 V7.0.0).
+
+%package libs_nb_%{libver}
+Summary: Opencore-amr-nb codec shared library
+Group: Development/Libraries
+Obsoletes: libopencore-amrnb*
+
+%description libs_nb_%{libver}
+This package contain the opencore-amr-nb shared library.
+
+%package libs_wb_%{libver}
+Summary: Opencore-amr-wb codec shared library
+Group: Development/Libraries
+Obsoletes: libopencore-amrwb*
+
+%description libs_wb_%{libver}
+This package contain the opencore-amr-wb shared library.
+
+%package devel
+Summary: Opencore-amr codec development files
+Group: Development/Libraries
+Requires: %{name}-libs_nb_%{libver}, %{name}-libs_wb_%{libver}
+
+%description devel
+This package contains the opencore-amr codec development files
 
 %prep
 %setup -q
@@ -30,6 +53,15 @@ make
 rm -rf %{buildroot}
 make install DESTDIR=%{buildroot}
 
+%post
+libs_nb_%{libver} -p /sbin/ldconfig
+libs_wb_%{libver} -p /sbin/ldconfig
+
+%postun
+libs_nb_%{libver} -p /sbin/ldconfig
+libs_wb_%{libver} -p /sbin/ldconfig
+
+
 %clean
 rm -rf %{buildroot}
 
@@ -37,7 +69,27 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %doc COPYING AUTHORS ChangeLog NEWS
 
+%files libs_nb_%{libver}
+%defattr(-,root,root,-)
+%{_libdir}/libopencore-amrnb.so.%{libver}
+
+%files libs_wb_%{libver}
+%defattr(-,root,root,-)
+%{_libdir}/libopencore-amrwb.so.%{libver}
+
+%files devel
+%defattr(-,root,root,-)
+%{_includedir}/opencore-amrnb/*.h
+%{_includedir}/opencore-amrwb/*.h
+%{_libdir}/*.so
+%{_libdir}/*.so.0
+%{_libdir}/*.la
+%{_libdir}/pkgconfig/*
+
 %changelog
+* Sat Jun 13 2015 Fredrik Fornstad <fredrik.fornstad@gmail.com> - 0.1.3-4
+- Removed dependency on atrpms scripts to comply with ClearOS policy
+
 * Wed May 6 2015 Fredrik Fornstad <fredrik.fornstad@gmail.com> - 0.1.3-3
 - Added buildrequirement atrpms-rpm-config
 
