@@ -2,8 +2,8 @@
 
 Summary: Adaptive Multi-Rate Floating-point (AMR) Speech Codec
 Name: opencore-amr
-Version: 0.1.3
-Release: 4%{?dist}
+Version: 0.1.5
+Release: 1%{?dist}
 License: Distributable
 Group: System Environment/Libraries
 URL: http://opencore-amr.sourceforge.net
@@ -53,21 +53,16 @@ make
 rm -rf %{buildroot}
 make install DESTDIR=%{buildroot}
 
-%post
-libs_nb_%{libver} -p /sbin/ldconfig
-libs_wb_%{libver} -p /sbin/ldconfig
+%post -p /sbin/ldconfig
 
-%postun
-libs_nb_%{libver} -p /sbin/ldconfig
-libs_wb_%{libver} -p /sbin/ldconfig
-
+%postun -p /sbin/ldconfig
 
 %clean
 rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc COPYING AUTHORS ChangeLog NEWS
+%doc LICENSE ChangeLog README
 
 %files libs_nb_%{libver}
 %defattr(-,root,root,-)
@@ -87,6 +82,11 @@ rm -rf %{buildroot}
 %{_libdir}/pkgconfig/*
 
 %changelog
+* Tue Apr 4 2017 Fredrik Fornstad <fredrik.fornstad@gmail.com> - 0.1.5-1
+- Updated upstream
+- Adjusted post and postun scripts
+- Adjusted doc files according to upstream package
+
 * Sat Jun 13 2015 Fredrik Fornstad <fredrik.fornstad@gmail.com> - 0.1.3-4
 - Removed dependency on atrpms scripts to comply with ClearOS policy
 
